@@ -2,9 +2,12 @@
 // Smart path resolution to work whether accessed directly or included from root index.php
 $base_path = file_exists('assets/css/bootstrap.css') ? 'assets/' : (file_exists('admin/assets/css/bootstrap.css') ? 'admin/assets/' : './assets/');
 $admin_path = file_exists('index.php') && !file_exists('admin') ? './' : (file_exists('admin/index.php') ? 'admin/' : './');
+
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,6 +19,7 @@ $admin_path = file_exists('index.php') && !file_exists('admin') ? './' : (file_e
     <!-- Custom Modern Styling -->
     <link rel="stylesheet" href="<?php echo $base_path; ?>css/style.css">
 </head>
+
 <body class="login-body">
     <div class="container">
         <div class="row justify-content-center">
@@ -35,7 +39,7 @@ $admin_path = file_exists('index.php') && !file_exists('admin') ? './' : (file_e
                                 Seamlessly manage student enrollments, academic records, attendance, and faculty operations with ease.
                             </p>
                         </div>
-                        
+
                         <div class="pt-4 border-top border-white-50">
                             <div class="d-flex align-items-center gap-3">
                                 <div class="d-flex -space-x-2">
@@ -57,32 +61,32 @@ $admin_path = file_exists('index.php') && !file_exists('admin') ? './' : (file_e
                         </div>
 
                         <div class="mb-4">
-                            <h3 class="fw-bold text-dark mb-1">Welcome Back! 👋</h3>
+                            <h3 class="fw-bold text-dark mb-1">Welcome Back!</h3>
                             <p class="text-muted small">Please enter your credentials to access the admin portal.</p>
                         </div>
                         <!-- Login Form (UI Only, submits to dashboard) -->
-                        <form action="<?php echo $admin_path; ?>index.php" method="GET">
+                        <form action="" method="POST">
                             <div class="mb-3">
-                                <label for="username" class="form-label fw-semibold text-dark small">Username or Email</label>
+                                <label for="username" class="form-label fw-semibold text-dark small">Email</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-end-0 text-muted">
                                         <i class="bi bi-person"></i>
                                     </span>
-                                    <input type="text" class="form-control bg-light border-start-0 ps-0" id="username" name="username" placeholder="e.g. admin@school.edu" value="admin@edupulse.edu" required>
+                                    <input type="text" class="form-control bg-light border-start-0 ps-0" name="email" >
                                 </div>
                             </div>
 
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <label for="password" class="form-label fw-semibold text-dark small">Password</label>
-                                    <a href="#" class="text-decoration-none small text-primary fw-medium" onclick="alert('Password reset link has been dispatched in demo mode.')">Forgot password?</a>
+                                    <a href="#" class="text-decoration-none small text-primary fw-medium">Forgot password?</a>
                                 </div>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-end-0 text-muted">
                                         <i class="bi bi-lock"></i>
                                     </span>
-                                    <input type="password" class="form-control bg-light border-start-0 border-end-0 ps-0" id="password" name="password" placeholder="••••••••" value="admin123" required>
-                                    <button class="btn btn-light border border-start-0 text-muted" type="button" id="togglePasswordBtn" onclick="togglePassword()">
+                                    <input type="password" class="form-control bg-light border-start-0 border-end-0 ps-0" name="password" placeholder="••••••••">
+                                    <button class="btn btn-light border border-start-0 text-muted" type="button" id="togglePasswordBtn">
                                         <i class="bi bi-eye" id="togglePasswordIcon"></i>
                                     </button>
                                 </div>
@@ -116,40 +120,51 @@ $admin_path = file_exists('index.php') && !file_exists('admin') ? './' : (file_e
 
     <!-- Bootstrap JS Bundle -->
     <script src="<?php echo $base_path; ?>js/bootstrap.js"></script>
-    <script>
-        function togglePassword() {
-            const pwdInput = document.getElementById('password');
-            const icon = document.getElementById('togglePasswordIcon');
-            if (pwdInput.type === 'password') {
-                pwdInput.type = 'text';
-                icon.classList.remove('bi-eye');
-                icon.classList.add('bi-eye-slash');
-            } else {
-                pwdInput.type = 'password';
-                icon.classList.remove('bi-eye-slash');
-                icon.classList.add('bi-eye');
-            }
-        }
-
-        function setDemoRole(role) {
-            const pills = document.querySelectorAll('.role-pill');
-            pills.forEach(p => p.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-
-            const usernameInput = document.getElementById('username');
-            const passwordInput = document.getElementById('password');
-
-            if (role === 'admin') {
-                usernameInput.value = 'admin@edupulse.edu';
-                passwordInput.value = 'admin123';
-            } else if (role === 'teacher') {
-                usernameInput.value = 'sarah.teacher@edupulse.edu';
-                passwordInput.value = 'teacher123';
-            } else if (role === 'staff') {
-                usernameInput.value = 'registrar.staff@edupulse.edu';
-                passwordInput.value = 'staff123';
-            }
-        }
-    </script>
 </body>
+
 </html>
+<?php
+
+include("./db.php");
+include("./admin/db.php");
+
+if (isset($_SESSION['email'])) {
+    echo '
+            <script>    
+                window.location.href="./index.php";
+            </script>';
+}
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    if (empty($email) && empty($password)) {
+        echo '
+        <script>
+            alert("please enter data in from");
+        </script>';
+    } else {
+
+        $sql = "SELECT `user_id`, `username`, `email`, `password`, `full_name`, `statuss`, `create_at` 
+        FROM `tb_user` 
+        WHERE `email` = '$email'  AND `password`= '$password'";
+        $res =  $con->query($sql);
+   
+
+        $row = mysqli_fetch_assoc($res);
+        // Use session
+        $_SESSION['email'] = $row['email'];
+        $_SESSION['id'] = $row['user_id'];
+
+        if ($res->num_rows > 0) {
+            echo '
+            <script>
+            alert("login success....");
+            window.location.href="./index.php;
+            </script>';
+        }
+    }
+}
+
+?>

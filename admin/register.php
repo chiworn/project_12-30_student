@@ -1,4 +1,6 @@
 <?php
+
+use Dom\Element;
 // Smart path resolution to work whether accessed directly or included
 $base_path = file_exists('assets/css/bootstrap.css') ? 'assets/' : (file_exists('admin/assets/css/bootstrap.css') ? 'admin/assets/' : './assets/');
 $admin_path = file_exists('login.php') ? './' : 'admin/';
@@ -18,6 +20,7 @@ $admin_path = file_exists('login.php') ? './' : 'admin/';
 </head>
 <body class="login-body py-5">
     <div class="container">
+        
         <div class="row justify-content-center">
             <div class="col-12 col-lg-11 col-xl-10">
                 <div class="login-card row g-0">
@@ -62,9 +65,8 @@ $admin_path = file_exists('login.php') ? './' : 'admin/';
                             <i class="bi bi-check-circle-fill me-2"></i>
                             <span>Account created successfully! Redirecting to login...</span>
                         </div>
+                        <form action="" method="POST">
 
-                        <!-- Registration Form (Maps directly to tbl_user) -->
-                        <form id="registerForm" onsubmit="handleRegister(event)">
                             <!-- Full Name (tbl_user.full_name) -->
                             <div class="mb-3">
                                 <label for="fullName" class="form-label fw-semibold text-dark small">Full Name</label>
@@ -72,7 +74,7 @@ $admin_path = file_exists('login.php') ? './' : 'admin/';
                                     <span class="input-group-text bg-light border-end-0 text-muted">
                                         <i class="bi bi-person"></i>
                                     </span>
-                                    <input type="text" class="form-control bg-light border-start-0 ps-0" id="fullName" name="full_name" placeholder="e.g. Alex Morgan" required>
+                                    <input type="text" class="form-control bg-light border-start-0 ps-0" name="full_name" placeholder="e.g. Alex Morgan" >
                                 </div>
                             </div>
 
@@ -83,7 +85,7 @@ $admin_path = file_exists('login.php') ? './' : 'admin/';
                                     <span class="input-group-text bg-light border-end-0 text-muted">
                                         <i class="bi bi-at"></i>
                                     </span>
-                                    <input type="text" class="form-control bg-light border-start-0 ps-0" id="username" name="username" placeholder="e.g. alex_morgan" required>
+                                    <input type="text" class="form-control bg-light border-start-0 ps-0" id="username" name="username" placeholder="e.g alex_morgan">
                                 </div>
                             </div>
 
@@ -94,13 +96,12 @@ $admin_path = file_exists('login.php') ? './' : 'admin/';
                                     <span class="input-group-text bg-light border-end-0 text-muted">
                                         <i class="bi bi-envelope"></i>
                                     </span>
-                                    <input type="email" class="form-control bg-light border-start-0 ps-0" id="email" name="email" placeholder="e.g. alex@edupulse.edu" required>
+                                    <input type="email" class="form-control bg-light border-start-0 ps-0" id="email" name="email" placeholder="e.g. alex@edupulse.edu" >
                                 </div>
                             </div>
 
                             <!-- Password & Confirm Password Row (tbl_user.password) -->
-                            <div class=" mb-3">
-                               
+                            <div class=" mb-3">                
                                     <label for="password" class="form-label fw-semibold text-dark small">Password</label>
                                     <div class="input-group">
                                         <span class="input-group-text bg-light border-end-0 text-muted">
@@ -120,14 +121,15 @@ $admin_path = file_exists('login.php') ? './' : 'admin/';
 
                             <!-- Terms & Conditions Agreement -->
                             <div class="form-check mb-4">
-                                <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                                <input class="form-check-input" type="checkbox" id="termsCheck" >
                                 <label class="form-check-label text-muted small" for="termsCheck">
                                     I agree to the <a href="#" class="text-primary text-decoration-none">Terms of Service</a> & <a href="#" class="text-primary text-decoration-none">Privacy Policy</a>
                                 </label>
                             </div>
-
+                            <div>
+                            </div>
                             <!-- Submit Button -->
-                            <button type="submit" id="btnSubmit" class="btn btn-primary-custom w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+                            <button type="submit" name="btnsubmit" id="btnSubmit" class="btn btn-primary-custom w-100 py-2 d-flex align-items-center justify-content-center gap-2">
                                 <span>Create Account</span>
                                 <i class="bi bi-arrow-right"></i>
                             </button>
@@ -144,58 +146,46 @@ $admin_path = file_exists('login.php') ? './' : 'admin/';
             </div>
         </div>
     </div>
-
     <!-- Bootstrap JS Bundle -->
     <script src="<?php echo $base_path; ?>js/bootstrap.js"></script>
-    <script>
-        function togglePasswordVisibility(inputId, iconId) {
-            const input = document.getElementById(inputId);
-            const icon = document.getElementById(iconId);
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('bi-eye');
-                icon.classList.add('bi-eye-slash');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('bi-eye-slash');
-                icon.classList.add('bi-eye');
-            }
-        }
-
-        function checkPasswordMatch() {
-            const pwd = document.getElementById('password').value;
-            const confirmPwd = document.getElementById('confirmPassword').value;
-            const mismatchNote = document.getElementById('passwordMismatchNote');
-            const submitBtn = document.getElementById('btnSubmit');
-
-            if (confirmPwd.length > 0 && pwd !== confirmPwd) {
-                mismatchNote.classList.remove('d-none');
-                submitBtn.disabled = true;
-            } else {
-                mismatchNote.classList.add('d-none');
-                submitBtn.disabled = false;
-            }
-        }
-
-        function handleRegister(e) {
-            e.preventDefault();
-            const pwd = document.getElementById('password').value;
-            const confirmPwd = document.getElementById('confirmPassword').value;
-
-            if (pwd !== confirmPwd) {
-                alert('Passwords do not match! Please check and try again.');
-                return;
-            }
-
-            const alertBox = document.getElementById('registerSuccessAlert');
-            alertBox.classList.remove('d-none');
-            alertBox.classList.add('show');
-
-            // Simulate transition to login page after registration
-            setTimeout(() => {
-                window.location.href = '<?php echo $admin_path; ?>login.php';
-            }, 1500);
-        }
-    </script>
 </body>
 </html>
+<?php
+    include("./db.php");
+    include("./admin/db.php");
+
+    if($_SERVER['REQUEST_METHOD'] === "POST"){
+    
+    // Get data from form
+   $full_name = $_POST['full_name'];
+   $username = $_POST['username'];
+   $email = $_POST['email'];
+   $password = $_POST['password'];
+
+  // Show data test 
+  echo "Full Name: " . $full_name . "<br>"; 
+  echo "Username: " . $username . "<br>";
+  echo "Email: " . $email . "<br>"; 
+  echo "Password: " . $password . "<br>";
+ if (empty($full_name) || empty($username) || empty($email) || empty($password)) { 
+    echo "Please fill in all fields."; } 
+
+         elseif (strlen($password) < 6) { 
+            echo "Password must be at least 6 characters."; }
+
+             else {
+            
+                echo"work in sql";
+                $sql = "INSERT INTO `tb_user`
+                        ( `username`, `email`, `password`, `full_name`, `statuss`)
+                        VALUES 
+                        ('$username','$email','$password','$full_name','active')";
+
+            if($con->query($sql)){
+            echo '<script>window.location.href="./login.php"</script>';
+
+            } 
+    }
+    }
+    
+?>

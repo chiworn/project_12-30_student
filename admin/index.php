@@ -1,17 +1,25 @@
-<?php 
+<?php
+session_start();
+
 if (file_exists('./Sidebar.php')) {
     include ('./Sidebar.php');
 } else {
     include (__DIR__ . '/Sidebar.php');
 }
+
 ?>
+
 <div class="col-12 col-md-9 col-lg-10 main-content">
+    
     <!-- Top Bar Navigation -->
     <div class="top-navbar d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
-        <div>
-            <h4 class="fw-bold mb-1 text-dark">Dashboard Overview</h4>
-            <p class="text-muted small mb-0">Welcome back, Alex! Here is what is happening today.</p>
-        </div>
+      <div>
+    <h4 class="fw-bold mb-1 text-dark">Dashboard Overview</h4>
+    <p class="text-muted small mb-0">
+        Welcome back, <strong><?php  echo $_SESSION['email']?> </strong>! 
+        User_ID <?php echo $_SESSION['id'] ?>
+    </p>
+</div>
 
         <div class="d-flex align-items-center gap-3">
             <!-- Search bar -->
