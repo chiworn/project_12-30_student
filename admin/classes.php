@@ -21,7 +21,7 @@ if (file_exists('./Sidebar.php')) {
             </div>
 
             <!-- Add New Class Button (Primary CTA) -->
-            <button class="btn btn-primary-custom d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#addClassModal">
+            <button style="background-color: #0D1C42;" class="btn btn-primary-custom d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#addClassModal">
                 <i class="bi bi-plus-lg"></i>
                 <span>Add Class</span>
             </button>
