@@ -17,9 +17,9 @@ if (file_exists('./Sidebar.php')) {
     <h4 class="fw-bold mb-1 text-dark">Dashboard Overview</h4>
     <p class="text-muted small mb-0">
         Welcome back, <strong><?php  echo $_SESSION['email']?> </strong>! 
-        User_ID <?php echo $_SESSION['id'] ?>
+        User_ID <?php echo htmlspecialchars($_SESSION['id']) ?>
     </p>
-</div>
+</div>​
 
         <div class="d-flex align-items-center gap-3">
             <!-- Search bar -->

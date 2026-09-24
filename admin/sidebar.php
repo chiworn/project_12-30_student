@@ -21,7 +21,7 @@
                     <div class="brand-icon-box">
                         <i class="bi bi-mortarboard-fill"></i>
                     </div>
-                    <span>EduPulse</span>
+                    <span>ETEC CENTER</span>
                 </a>
 
                 <!-- User Quick Info -->
