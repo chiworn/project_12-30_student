@@ -81,7 +81,7 @@
 
                 <!-- Sidebar Footer / Logout -->
                 <div class="sidebar-footer">
-                    <a href="login.php" class="btn btn-outline-danger btn-sm w-100 d-flex align-items-center justify-content-center gap-2 py-2" style="border-color: #334155; color: #f87171;">
+                    <a href="./logout.php" class="btn btn-outline-danger btn-sm w-100 d-flex align-items-center justify-content-center gap-2 py-2" style="border-color: #334155; color: #f87171;">
                         <i class="bi bi-box-arrow-left"></i>
                         <span>Logout</span>
                     </a>

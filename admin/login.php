@@ -128,7 +128,11 @@ session_start();
 include("./db.php");
 include("./admin/db.php");
 
-if (isset($_SESSION['email'])) {
+
+echo $_SESSION['email'];
+echo $_SESSION['id'];
+
+if (!empty($_SESSION['email'])) {
     echo '
             <script>    
                 window.location.href="./index.php";

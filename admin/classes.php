@@ -1,4 +1,11 @@
 <?php 
+session_start();
+ $userid = $_SESSION['id'];
+
+if(!isset($_SESSION["id"]) && $_SESSION["id"] == '') {
+    echo "No session ... ";
+}
+
 if (file_exists('./Sidebar.php')) {
     include ('./Sidebar.php');
 } else {
@@ -9,7 +16,10 @@ if (file_exists('./Sidebar.php')) {
     <!-- Top Bar Navigation -->
     <div class="top-navbar d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
         <div>
-            <h4 class="fw-bold mb-1 text-dark">Class & Batch Management</h4>
+           <h4 class="fw-bold mb-1 text-dark">
+            Class & Batch Management (User ID: <?= htmlspecialchars($_SESSION['id'] ?? 'Guest') ?>)
+        </h4>
+
             <p class="text-muted small mb-0">Manage course schedules, room assignments, and class cards.</p>
         </div>
 
@@ -209,7 +219,7 @@ if (file_exists('./Sidebar.php')) {
                         </div>
                     </div>
                     <div class="d-flex gap-2">
-                        <button class="btn-card-action btn-outline-custom w-50 justify-content-center" onclick="openAddStudentModal('CLS-001', 'Web Development')">
+                        <button class="btn-card-action btn-outline-custom w-50 justify-content-center text-decoration-none" onclick="openAddStudentModal('CLS-001', 'Web Development')">
                             <i class="bi bi-person-plus-fill"></i> Add Student
                         </button>
                         <a href="attendance.php?class=web" class="btn-card-action btn-primary-tint w-50 justify-content-center text-decoration-none">
@@ -229,16 +239,17 @@ if (file_exists('./Sidebar.php')) {
                             <h5 class="modal-title mb-0" id="addClassModalLabel">Add New Class</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form id="addClassForm" >
+                        <form id="addClassForm" action="" method="POST" >
                             <div class="modal-body p-4">
                                 <!-- Row 1: Course, Lessons, Status -->
                                 <div class="row g-3 mb-3">
                                     <div class="col-12 col-md-4">
                                         <label class="form-label form-label-custom">Course</label>
-                                        <select class="form-select form-select-custom" id="modalCourse">
+                                        <select class="form-select form-select-custom" name="course" id="modalCourse">
                                             <option value="" selected disabled>Select Course</option>
                                             <option value="Web Development">Web Development</option>
                                             <option value="Mobile App Development">Mobile App Development</option>
+                            
                                             <option value="Data Science & AI">Data Science & AI</option>
                                             <option value="Database Administration">Database Administration</option>
                                             <option value="Network Security">Network Security</option>
@@ -246,7 +257,7 @@ if (file_exists('./Sidebar.php')) {
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <label class="form-label form-label-custom">Lessons</label>
-                                        <select class="form-select form-select-custom" id="modalLesson">
+                                        <select class="form-select form-select-custom" name="lesson" id="modalLesson">
                                             <option value="" selected disabled>Select Lesson</option>
                                             <option value="Lesson 1: Introduction">Lesson 1: Introduction</option>
                                             <option value="Lesson 2: Core Fundamentals">Lesson 2: Core Fundamentals</option>
@@ -256,7 +267,7 @@ if (file_exists('./Sidebar.php')) {
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <label class="form-label form-label-custom">Status</label>
-                                        <select class="form-select form-select-custom" id="modalStatus">
+                                        <select class="form-select form-select-custom" name="status" id="modalStatus">
                                             <option value="" selected disabled>Select Status</option>
                                             <option value="Active">Active</option>
                                             <option value="Upcoming">Upcoming</option>
@@ -270,7 +281,7 @@ if (file_exists('./Sidebar.php')) {
                                 <div class="row g-3 mb-3">
                                     <div class="col-12 col-md-4">
                                         <label class="form-label form-label-custom">Building</label>
-                                        <select class="form-select form-select-custom" id="modalBuilding">
+                                        <select class="form-select form-select-custom" name="building" id="modalBuilding">
                                             <option value="" selected disabled>Select Building</option>
                                             <option value="Building A (Engineering)">Building A (Engineering)</option>
                                             <option value="Building B (IT Center)">Building B (IT Center)</option>
@@ -280,7 +291,7 @@ if (file_exists('./Sidebar.php')) {
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <label class="form-label form-label-custom">Floor</label>
-                                        <select class="form-select form-select-custom" id="modalFloor">
+                                        <select class="form-select form-select-custom" name="floor" id="modalFloor">
                                             <option value="" selected disabled>Select Floor</option>
                                             <option value="Ground Floor">Ground Floor</option>
                                             <option value="1st Floor">1st Floor</option>
@@ -291,7 +302,7 @@ if (file_exists('./Sidebar.php')) {
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <label class="form-label form-label-custom">Room</label>
-                                        <select class="form-select form-select-custom" id="modalRoom">
+                                        <select class="form-select form-select-custom" name="room" id="modalRoom">
                                             <option value="" selected disabled>Select Room</option>
                                             <option value="Room 101">Room 101</option>
                                             <option value="Room 102">Room 102</option>
@@ -306,7 +317,7 @@ if (file_exists('./Sidebar.php')) {
                                 <div class="row g-3 mb-3">
                                     <div class="col-12 col-md-6">
                                         <label class="form-label form-label-custom">Term</label>
-                                        <select class="form-select form-select-custom" id="modalTerm">
+                                        <select class="form-select form-select-custom" name="term" id="modalTerm">
                                             <option value="" selected disabled>Select Term</option>
                                             <option value="Fall Term 2026">Fall Term 2026</option>
                                             <option value="Spring Term 2026">Spring Term 2026</option>
@@ -316,7 +327,7 @@ if (file_exists('./Sidebar.php')) {
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <label class="form-label form-label-custom">Time</label>
-                                        <select class="form-select form-select-custom" id="modalTime">
+                                        <select class="form-select form-select-custom" name="time" id="modalTime">
                                             <option value="" selected disabled>Select Time</option>
                                             <option value="08:00 AM - 09:30 AM">08:00 AM - 09:30 AM</option>
                                             <option value="10:00 AM - 11:30 AM">10:00 AM - 11:30 AM</option>
@@ -346,3 +357,31 @@ if (file_exists('./Sidebar.php')) {
     <script src="assets/js/bootstrap.js"></script>
 </body>
 </html>
+
+<?php
+
+    include("./db.php");
+    include("./admin/db.php");
+    if($_SERVER['REQUEST_METHOD']=="POST"){
+        
+    $Course     = $_POST['course'];
+    $Lesson     = $_POST['lesson'];
+    $Status     = $_POST['status'];
+    $Building   = $_POST['building'];
+    $Floor      = $_POST['floor'];
+    $Room       = $_POST['room'];
+    $term       = $_POST['term'];
+    $time       = $_POST['time'];
+
+    $sql = "INSERT INTO `tb_class`
+            (`course`, `lesson`, `status`, `building`, `floor`, `room`, `term`, `time_slot`, `create_by`)
+            VALUES 
+            ('$Course','$Lesson','$Status','$Building','$Floor','$Room','$term','$time','$userid')";
+
+    if($con->query($sql)){
+        echo "insert success";
+    }
+   
+}
+
+?>
