@@ -6,6 +6,9 @@ if(!isset($_SESSION["id"]) && $_SESSION["id"] == '') {
     echo "No session ... ";
 }
 
+include("./db.php");
+    include("./admin/db.php");
+
 if (file_exists('./Sidebar.php')) {
     include ('./Sidebar.php');
 } else {
@@ -121,6 +124,12 @@ if (file_exists('./Sidebar.php')) {
     <!-- CLASS DETAIL CARDS GRID (NO TABLE) -->
     <div class="row g-4" id="classCardsContainer">
         <!-- Class Card 1: Web Development -->
+       <?php 
+         $sqlselect = "SELECT `class_id`, `course`, `lesson`, `status`, `building`, `floor`, `room`, `term`, `time_slot`, `create_by`, `create_at` FROM `tb_class` WHERE `create_by` =  $userid";
+         $res =  $con->query($sqlselect);
+
+         while( $row = mysqli_fetch_assoc($res)){
+         ?>
         <div class="col-12 col-md-6 col-xl-4 class-card-wrapper" data-status="active" data-search="web development lesson 2 building b it center room 204 lab fall term">
             <div class="class-detail-card">
                 <div>
@@ -131,16 +140,16 @@ if (file_exists('./Sidebar.php')) {
                                 <i class="bi bi-code-slash"></i>
                             </div>
                             <div>
-                                <h6 class="fw-bold text-dark mb-0">Web Development</h6>
-                                <span class="text-muted small">Full-Stack Track</span>
+                                <h6 class="fw-bold text-dark mb-0"><?= $row['course'] ?></h6>
+                                <span class="text-muted small"><?= $row['course'] ?></span>
                             </div>
                         </div>
-                        <span class="badge-status active">Active</span>
+                        <span class="badge-status active"><?= $row['status'] ?></span>
                     </div>
                     <!-- Lesson info -->
                     <div class="mb-3">
                         <div class="fw-semibold text-dark small mb-1">
-                            <i class="bi bi-book-half text-primary me-1"></i> Lesson
+                            <i class="bi bi-book-half text-primary me-1"></i><?= $row['lesson'] ?>
                         </div>
                         <div class="text-muted small ps-3 border-start border-2 border-primary">
                             Lesson 2: Responsive Frontend Design
@@ -153,16 +162,16 @@ if (file_exists('./Sidebar.php')) {
                                 <i class="bi bi-building text-primary"></i>
                                 <div>
                                     <span class="text-muted small">Building:</span>
-                                    <strong class="text-dark">Building B (IT Center)</strong>
+                                    <strong class="text-dark"><?= $row['building`'] ?></strong>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-6">Building B (IT Center)
                             <div class="class-detail-item">
                                 <i class="bi bi-layers"></i>
                                 <div>
                                     <span class="text-muted small">Floor:</span>
-                                    <strong class="text-dark">2nd Floor</strong>
+                                    <strong class="text-dark"><?= $row['floor'] ?></strong>
                                 </div>
                             </div>
                         </div>
@@ -171,7 +180,7 @@ if (file_exists('./Sidebar.php')) {
                                 <i class="bi bi-door-closed"></i>
                                 <div>
                                     <span class="text-muted small">Room:</span>
-                                    <strong class="text-dark">Room 204 (Lab)</strong>
+                                    <strong class="text-dark"><?= $row['room'] ?></strong>
                                 </div>
                             </div>
                         </div>
@@ -183,7 +192,7 @@ if (file_exists('./Sidebar.php')) {
                                 <i class="bi bi-calendar-range text-success"></i>
                                 <div>
                                     <span class="text-muted small">Term:</span>
-                                    <strong class="text-dark">Fall Term 2026</strong>
+                                    <strong class="text-dark"><?= $row['term'] ?></strong>
                                 </div>
                             </div>
                         </div>
@@ -229,6 +238,7 @@ if (file_exists('./Sidebar.php')) {
                 </div>
             </div>
         </div>
+        <?php }?>
     </div>
 
             <!-- ADD NEW CLASS MODAL (MATCHING SCREENSHOT) -->
@@ -360,8 +370,7 @@ if (file_exists('./Sidebar.php')) {
 
 <?php
 
-    include("./db.php");
-    include("./admin/db.php");
+    
     if($_SERVER['REQUEST_METHOD']=="POST"){
         
     $Course     = $_POST['course'];
